@@ -17,6 +17,12 @@ nativeImage {
   }
   executableName = 'cobol-check'
   outputDirectory = file("$buildDir/bin")
+  arguments {
+    add '--no-fallback'
+    add '--enable-all-security-services'
+    add '-H:IncludeResourceBundles=org.openmainframeproject.cobolcheck.messages.messages'
+    add '-H:IncludeLocales=en,de,fr,es,fi,it,ja'
+  }
 }
 
 tasks.withType(Copy).all {
