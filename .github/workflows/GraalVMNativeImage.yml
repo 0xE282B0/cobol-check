@@ -1,0 +1,30 @@
+name: GraalVM Community Edition build
+
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ${{ matrix.config.os }}-latest
+    strategy:
+      matrix:
+        config:
+          - os: ubuntu
+          - os: macos
+          - os: windows
+    steps:
+      - uses: actions/checkout@v2
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          version: 'latest'
+          java-version: '17'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build executable binary
+        run: |
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          echo "JAVA_HOME: $JAVA_HOME"
+          ./gradlew nativeImage
+      - name: Upload binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: cobol-check-${{ matrix.config.os }}-amd64
+          path: build/bin/cobol-check*
