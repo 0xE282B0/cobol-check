@@ -4,6 +4,19 @@ plugins {
     id 'java-library'
     id 'org.sonarqube' version '3.0'
     id 'jacoco'
+    id 'org.mikeneck.graalvm-native-image' version 'v1.4.0'
+}
+
+import org.mikeneck.graalvm.BuildTypeSelector
+nativeImage {
+  graalVmHome = System.getProperty('java.home')
+  buildType { BuildTypeSelector build ->
+    build.executable {
+      main = 'org.openmainframeproject.cobolcheck.Main'
+    }
+  }
+  executableName = 'cobol-check'
+  outputDirectory = file("$buildDir/bin")
 }
 
 def productVersion = '0.2.0'
